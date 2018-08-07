@@ -14,7 +14,30 @@ let rootPath = path.join(__dirname,'www'); // console.log(rootPath);
 
 // 创建服务器
 let server = http.createServer((request,response)=>{
-    response.end('hello');
+    // 生成地址
+    let targetPath = path.join(rootPath,request.url); //console.log(targetPath);
+    // 判断路径是否存在
+    if(fs.existsSync(targetPath)){
+        // 存在
+        // 文件 还是文件夹
+        let stats = fs.stat(targetPath);  //console.log(stats);
+    }else{
+        // 只能设置头 不能设置 状态码
+        response.statusCode = 404;
+        response.setHeader('content-type','text/html;charset=utf-8');
+        // 不存在 404
+        response.end(`
+            <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+            <html><head>
+            <title>404 Not Found</title>
+            </head><body>
+            <h1>Not Found</h1>
+            <p>你请求的${request.url} 不在服务器上哦,检查一下呗</p>
+            </body></html>
+
+        `)
+    }
+    
 })
 
 // 开启服务器(监听)
